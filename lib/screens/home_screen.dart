@@ -149,11 +149,12 @@ class HomeScreen extends StatelessWidget {
       ),
       // Static Bottom Navigation Bar (Design Only)
       bottomNavigationBar: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 28),
+        width: 29,
+        margin: const EdgeInsets.only(bottom: 28, right: 43, left: 43),
         height: 80,
+
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.black,
           borderRadius: const BorderRadius.all(Radius.circular(28)),
         ),
         child: Row(
@@ -201,8 +202,8 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: isActive ? Colors.blue.shade50 : Colors.transparent,
-        borderRadius: BorderRadius.circular(15),
+        color: isActive ? Colors.white : Colors.transparent,
+        borderRadius: BorderRadius.circular(25),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -212,12 +213,12 @@ class HomeScreen extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: isActive ? Colors.blue.shade100 : Colors.transparent,
+              color: isActive ? Colors.black : Colors.white,
               shape: BoxShape.circle,
             ),
             child: Icon(
               isActive ? activeIcon : icon,
-              color: isActive ? Colors.blue.shade800 : Colors.grey.shade600,
+              color: isActive ? Colors.white : Colors.grey.shade600,
               size: 24,
             ),
           ),
