@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 25),
+            padding: const EdgeInsets.only(right: 25, top: 15),
             child: CircleAvatar(
               radius: 22,
               backgroundImage: AssetImage("images/profile_pic.jpg"),
@@ -50,19 +50,26 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Bar
+            // Search Bar with icon on right
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 50,
+              width: 375,
+              margin: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+              height: 65,
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(22),
               ),
               child: Row(
-                children: const [
-                  Icon(Icons.search),
-                  SizedBox(width: 10),
-                  Text("Search places"),
+                children: [
+                  const Icon(Icons.search, size: 35),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Search",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
+                  ),
+                  const Spacer(), // ← This pushes the icon to the right
+                  Icon(Icons.filter_list, color: Colors.black, size: 35),
                 ],
               ),
             ),
