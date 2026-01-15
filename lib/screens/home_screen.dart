@@ -7,9 +7,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Static selected index (for design only)
-    int selectedIndex = 0;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -147,43 +144,49 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      // Static Bottom Navigation Bar (Design Only)
+      // Final Corrected Navigation Bar
       bottomNavigationBar: Container(
-        width: 29,
-        margin: const EdgeInsets.only(bottom: 28, right: 43, left: 43),
+        margin: const EdgeInsets.only(bottom: 28, left: 43, right: 43),
         height: 80,
-
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: const BorderRadius.all(Radius.circular(28)),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Home Icon (Active - for design)
+            // Home (Active)
             _buildNavItem(
-              icon: Icons.home,
+              icon: Icons.home_outlined,
               activeIcon: Icons.home,
-
-              isActive: true, // First one is active for design
+              isActive: true,
             ),
 
+            // Book
             _buildNavItem(
-              icon: Icons.bookmark,
+              icon: Icons.bookmark_border,
               activeIcon: Icons.bookmark,
               isActive: false,
             ),
 
+            // Explore
             _buildNavItem(
-              icon: Icons.heart_broken,
+              icon: Icons.heart_broken_rounded,
               activeIcon: Icons.explore,
               isActive: false,
             ),
 
+            // Menu
             _buildNavItem(
-              icon: Icons.menu_open_outlined,
+              icon: Icons.menu_outlined,
               activeIcon: Icons.menu,
-
               isActive: false,
             ),
           ],
@@ -192,39 +195,25 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Navigation Item Builder
+  // Fixed Navigation Item Builder
   Widget _buildNavItem({
     required IconData icon,
     required IconData activeIcon,
-    // required String label,
     required bool isActive,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      width: 50,
+      height: 50,
       decoration: BoxDecoration(
         color: isActive ? Colors.white : Colors.transparent,
-        borderRadius: BorderRadius.circular(25),
+        shape: BoxShape.circle,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Icon with active state
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: isActive ? Colors.black : Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isActive ? activeIcon : icon,
-              color: isActive ? Colors.white : Colors.grey.shade600,
-              size: 24,
-            ),
-          ),
-
-          const SizedBox(height: 4),
-        ],
+      child: Icon(
+        isActive ? activeIcon : icon,
+        color: isActive
+            ? Colors.black
+            : Colors.grey.shade400, // Silver when inactive
+        size: 24,
       ),
     );
   }
