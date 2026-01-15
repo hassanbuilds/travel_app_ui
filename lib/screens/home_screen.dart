@@ -1,9 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   CarouselSliderController buttonCarouselController =
       CarouselSliderController();
+
+  // State for liked cards
+  Map<String, bool> likedCards = {
+    "Brazil": false,
+    "Japan": false,
+    "France": false,
+  };
+
+  // State for selected category
+  int selectedCategoryIndex = 0;
+
+  // Categories list
+  final List<String> categories = [
+    "Asia",
+    "Europe",
+    "South America",
+    "North Korea",
+    "Africa",
+  ];
+
+  // Data for carousel items
+  final List<Map<String, dynamic>> destinations = [
+    {
+      'title': 'Brazil',
+      'subtitle': 'Rio de Janeiro',
+      'rating': 5.0,
+      'reviews': 143,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      'title': 'Japan',
+      'subtitle': 'Tokyo',
+      'rating': 4.8,
+      'reviews': 287,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      'title': 'France',
+      'subtitle': 'Paris',
+      'rating': 4.9,
+      'reviews': 342,
+      'imageUrl':
+          'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +121,7 @@ class HomeScreen extends StatelessWidget {
                     "Search",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
                   ),
-                  const Spacer(), // ← This pushes the icon to the right
+                  const Spacer(),
                   Icon(Icons.filter_list, color: Colors.black, size: 35),
                 ],
               ),
@@ -77,7 +129,7 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Categories
+            // Categories with click functionality
             const Text(
               "Select your next trip",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -90,55 +142,67 @@ class HomeScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    _buildCategory("Asia", true),
-                    _buildCategory("Europe", false),
-                    _buildCategory("America", false),
-                    _buildCategory("Canada", false),
-                    _buildCategory("Pakistan", false),
-                    _buildCategory("London", false),
-                  ],
+                  children: List.generate(
+                    categories.length,
+                    (index) => GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedCategoryIndex = index;
+                          // Jump to corresponding card in carousel if available
+                          if (index < destinations.length) {
+                            buttonCarouselController.animateToPage(
+                              index,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                            );
+                          }
+                        });
+                      },
+                      child: _buildCategory(
+                        categories[index],
+                        selectedCategoryIndex == index,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
 
             const SizedBox(height: 20),
 
+            // Destination Cards Carousel
             CarouselSlider(
-              items: [
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                ),
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 89, 87, 86),
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                ),
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 6, 1, 0),
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                ),
-              ],
+              items: destinations.map((destination) {
+                return _buildDestinationCard(
+                  title: destination['title'],
+                  subtitle: destination['subtitle'],
+                  rating: destination['rating'],
+                  reviews: destination['reviews'],
+                  imageUrl: destination['imageUrl'],
+                  isLiked: likedCards[destination['title']] ?? false,
+                  onLikePressed: () {
+                    setState(() {
+                      likedCards[destination['title']] =
+                          !(likedCards[destination['title']] ?? false);
+                    });
+                  },
+                );
+              }).toList(),
               carouselController: buttonCarouselController,
               options: CarouselOptions(
                 autoPlay: false,
                 enlargeCenterPage: true,
-                viewportFraction: 0.8,
+                viewportFraction: 0.85,
                 aspectRatio: 1.8,
-                initialPage: 2,
-                height: 380,
+                initialPage: 0,
+                height: 405,
+                onPageChanged: (index, _) {
+                  setState(() {
+                    selectedCategoryIndex = index < categories.length
+                        ? index
+                        : 0;
+                  });
+                },
               ),
             ),
           ],
@@ -195,6 +259,179 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  // Destination Card Builder - UPDATED with like functionality
+  Widget _buildDestinationCard({
+    required String title,
+    required String subtitle,
+    required double rating,
+    required int reviews,
+    required String imageUrl,
+    required bool isLiked,
+    required VoidCallback onLikePressed,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        image: DecorationImage(
+          image: NetworkImage(imageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [
+              Colors.black.withOpacity(0.8),
+              Colors.black.withOpacity(0.5),
+              Colors.transparent,
+            ],
+          ),
+        ),
+        child: Stack(
+          children: [
+            // Favorite Icon (Top Right) - NOW CLICKABLE
+            Positioned(
+              top: 20,
+              right: 20,
+              child: GestureDetector(
+                onTap: onLikePressed,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : Colors.black,
+                    size: 22,
+                  ),
+                ),
+              ),
+            ),
+
+            // Content (Bottom Section)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(25, 25, 25, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // TITLE AND SUBTITLE
+                    Container(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          const SizedBox(height: 4),
+
+                          // Subtitle
+                          Text(
+                            subtitle,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 18,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // RATING SECTION
+                    Row(
+                      children: [
+                        // Star Icon
+                        const Icon(Icons.star, color: Colors.amber, size: 22),
+                        const SizedBox(width: 6),
+
+                        // Rating Number
+                        Text(
+                          rating.toStringAsFixed(1),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+
+                        // Reviews Count
+                        Text(
+                          "($reviews reviews)",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    // "SEE MORE" BUTTON
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 28,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          "See more",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // Fixed Navigation Item Builder
   Widget _buildNavItem({
     required IconData icon,
@@ -210,15 +447,13 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Icon(
         isActive ? activeIcon : icon,
-        color: isActive
-            ? Colors.black
-            : Colors.grey.shade400, // Silver when inactive
+        color: isActive ? Colors.black : Colors.grey.shade400,
         size: 24,
       ),
     );
   }
 
-  static Widget _buildCategory(String title, bool isSelected) {
+  Widget _buildCategory(String title, bool isSelected) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
