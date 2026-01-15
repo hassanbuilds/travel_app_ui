@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  CarouselSliderController buttonCarouselController =
+      CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,36 +80,66 @@ class HomeScreen extends StatelessWidget {
             // Categories
             const Text(
               "Select your next trip",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 12),
 
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildCategory("Asia", true),
-                  _buildCategory("Europe", false),
-                  _buildCategory("America", false),
-                  _buildCategory("Canada", false),
-                  _buildCategory("Pakistan", false),
-                  _buildCategory("London", false),
-                ],
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 15),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildCategory("Asia", true),
+                    _buildCategory("Europe", false),
+                    _buildCategory("America", false),
+                    _buildCategory("Canada", false),
+                    _buildCategory("Pakistan", false),
+                    _buildCategory("London", false),
+                  ],
+                ),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            // Destination Card (Fake for now)
-            Container(
-              height: 250,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(16),
+            CarouselSlider(
+              items: [
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 89, 87, 86),
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 6, 1, 0),
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+              ],
+              carouselController: buttonCarouselController,
+              options: CarouselOptions(
+                autoPlay: false,
+                enlargeCenterPage: true,
+                viewportFraction: 0.8,
+                aspectRatio: 1.8,
+                initialPage: 2,
+                height: 380,
               ),
-              child: const Center(child: Text("Destination Card Here")),
             ),
           ],
         ),
