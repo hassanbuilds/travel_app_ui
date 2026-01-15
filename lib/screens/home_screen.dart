@@ -7,6 +7,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Static selected index (for design only)
+    int selectedIndex = 0;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -143,6 +146,92 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      // Static Bottom Navigation Bar (Design Only)
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 28),
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 15,
+              offset: const Offset(0, -5),
+            ),
+          ],
+
+          borderRadius: const BorderRadius.all(Radius.circular(28)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Home Icon (Active - for design)
+            _buildNavItem(
+              icon: Icons.home,
+              activeIcon: Icons.home,
+
+              isActive: true, // First one is active for design
+            ),
+
+            _buildNavItem(
+              icon: Icons.bookmark,
+              activeIcon: Icons.bookmark,
+              isActive: false,
+            ),
+
+            _buildNavItem(
+              icon: Icons.heart_broken,
+              activeIcon: Icons.explore,
+              isActive: false,
+            ),
+
+            _buildNavItem(
+              icon: Icons.menu_open_outlined,
+              activeIcon: Icons.menu,
+
+              isActive: false,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Navigation Item Builder
+  Widget _buildNavItem({
+    required IconData icon,
+    required IconData activeIcon,
+    // required String label,
+    required bool isActive,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: isActive ? Colors.blue.shade50 : Colors.transparent,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Icon with active state
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: isActive ? Colors.blue.shade100 : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isActive ? activeIcon : icon,
+              color: isActive ? Colors.blue.shade800 : Colors.grey.shade600,
+              size: 24,
+            ),
+          ),
+
+          const SizedBox(height: 4),
+        ],
       ),
     );
   }
