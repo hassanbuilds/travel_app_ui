@@ -72,11 +72,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       // ... rest of your UI elements
                       CircleAvatar(
-                        radius: 60,
-                        backgroundImage: NetworkImage(
-                          widget.destination['imageUrl'] as String? ??
-                              'https://en.wikipedia.org/wiki/File:Flag_of_Brazil.svg',
-                        ),
+                        radius: 10,
+
+                        backgroundImage: AssetImage("images/brazil_flag.png"),
                       ),
                     ],
                   ),
