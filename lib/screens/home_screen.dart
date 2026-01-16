@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }).toList(),
                 carouselController: buttonCarouselController,
                 options: CarouselOptions(
-                  height: 450,
+                  height: 410,
                   enlargeCenterPage: true,
                   viewportFraction: 0.85,
                   aspectRatio: 1.0,
@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 20),
+                      const Icon(Icons.star, color: Colors.white, size: 20),
                       const SizedBox(width: 5),
                       Text(
                         "$rating ($reviews reviews)",
@@ -328,9 +328,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.black.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: Colors.white30),
+                        border: Border.all(color: Colors.black),
                       ),
                       child: const Row(
                         children: [
