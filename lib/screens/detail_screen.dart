@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DetailScreen extends StatefulWidget {
+import 'package:travel_app/provider/travel_provider.dart';
+
+// Adjust path based on your folder structure
+
+class DetailScreen extends StatelessWidget {
   final Map<String, dynamic> destination;
   const DetailScreen({super.key, required this.destination});
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends State<DetailScreen> {
-  bool isFavorite = false;
-
-  @override
   Widget build(BuildContext context) {
+    // We use the 'title' from the destination map as the unique key for the provider
+    final String title =
+        destination['title'] ?? destination['name'] ?? "Rio de Janeiro";
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -25,7 +27,7 @@ class _DetailScreenState extends State<DetailScreen> {
             right: 0,
             height: 420,
             child: Image.network(
-              widget.destination['imageUrl'] ??
+              destination['imageUrl'] ??
                   'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=800',
               fit: BoxFit.cover,
               width: double.infinity,
@@ -70,7 +72,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        _buildMainInfo(),
+                        _buildMainInfo(title),
                       ],
                     ),
                   ),
@@ -84,7 +86,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Rio de Janeiro, often simply called Rio, is one of Brazil's most iconic cities, renowned for its breathtaking landscapes, vibrant culture, and world-famous...",
+                            "$title, often simply called the heart of the region, is one of the most iconic locations, renowned for its breathtaking landscapes, vibrant culture, and world-famous attractions.",
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[800],
@@ -135,7 +137,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               physics: const BouncingScrollPhysics(),
                               children: [
                                 _buildTourCard(
-                                  "Iconic Brazil",
+                                  "Iconic Explorer",
                                   "8 days",
                                   "\$659",
                                 ),
@@ -164,7 +166,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           ),
 
-          // 3. TOP ACTION BUTTONS
+          // 3. TOP ACTION BUTTONS (Provider logic here)
           Positioned(
             top: 0,
             left: 0,
@@ -182,10 +184,18 @@ class _DetailScreenState extends State<DetailScreen> {
                       icon: Icons.arrow_back_ios_new,
                       onTap: () => Navigator.pop(context),
                     ),
-                    _buildIconButton(
-                      icon: isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: Colors.red,
-                      onTap: () => setState(() => isFavorite = !isFavorite),
+                    // CONSUMER used to update Favorite Button via Provider
+                    Consumer<TravelProvider>(
+                      builder: (context, travelProvider, child) {
+                        final bool isLiked = travelProvider.isLiked(title);
+                        return _buildIconButton(
+                          icon: isLiked
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: isLiked ? Colors.red : Colors.black87,
+                          onTap: () => travelProvider.toggleLike(title),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -212,7 +222,7 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Widget _buildMainInfo() {
+  Widget _buildMainInfo(String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,17 +230,17 @@ class _DetailScreenState extends State<DetailScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Rio de Janeiro",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 6),
             Row(
               children: [
-                const Text("🇧🇷", style: TextStyle(fontSize: 20)),
+                const Text("📍", style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Text(
-                  "Brazil",
+                  "Destination Guide",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[700],
@@ -273,18 +283,14 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Widget _buildTourCard(String title, String duration, String price) {
+  Widget _buildTourCard(String tourTitle, String duration, String price) {
     return Container(
       width: 240,
       decoration: BoxDecoration(
-        // GRADIENT ADDED HERE: From pure white to a very light grey
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            Colors.grey.shade50, // Noticeable but remains white-themed
-          ],
+          colors: [Colors.white, Colors.grey.shade50],
         ),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
@@ -311,10 +317,9 @@ class _DetailScreenState extends State<DetailScreen> {
               padding: const EdgeInsets.all(15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    title,
+                    tourTitle,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 17,
@@ -336,10 +341,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       const SizedBox(width: 5),
                       const Text(
                         "4.6",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 25),
                       Container(

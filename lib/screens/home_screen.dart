@@ -1,6 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'detail_screen.dart';
+import 'detail_screen.dart'; // Ensure this file exists with a DetailScreen widget
+
+void main() {
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: HomeScreen()),
+  );
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,9 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Categories list
   final List<String> categories = [
+    "South America",
     "Asia",
     "Europe",
-    "South America",
     "North Korea",
     "Africa",
   ];
@@ -66,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        toolbarHeight: 80, // Added height for better spacing
+        toolbarHeight: 80,
         backgroundColor: Colors.white,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,15 +81,15 @@ class _HomeScreenState extends State<HomeScreen> {
               "Hello, Vanessa",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 28, // Bigger title
-                fontWeight: FontWeight.w900, // Extra bold
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
                 letterSpacing: -0.5,
               ),
             ),
             Text(
               "Welcome to Trip Glide",
               style: TextStyle(
-                color: Colors.grey.shade500, // Modern soft grey
+                color: Colors.grey.shade500,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
               ),
@@ -95,127 +101,128 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.only(right: 20),
             child: CircleAvatar(
               radius: 24,
+              backgroundColor: Colors.grey,
               backgroundImage: AssetImage("images/profile_pic.jpg"),
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Search Bar - Fixed to double.infinity
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(20),
+      body: SingleChildScrollView(
+        // Added to prevent overflow on smaller screens
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search Bar
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.search, size: 28, color: Colors.grey),
+                    SizedBox(width: 10),
+                    Text(
+                      "Search",
+                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    ),
+                    Spacer(),
+                    Icon(Icons.filter_list, color: Colors.black, size: 28),
+                  ],
+                ),
               ),
-              child: const Row(
-                children: [
-                  Icon(Icons.search, size: 28, color: Colors.grey),
-                  SizedBox(width: 10),
-                  Text(
-                    "Search",
-                    style: TextStyle(color: Colors.grey, fontSize: 18),
-                  ),
-                  Spacer(),
-                  Icon(Icons.filter_list, color: Colors.black, size: 28),
-                ],
+
+              const SizedBox(height: 25),
+
+              const Text(
+                "Select your next trip",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.5,
+                ),
               ),
-            ),
 
-            const SizedBox(height: 25),
+              const SizedBox(height: 15),
 
-            const Text(
-              "Select your next trip",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                letterSpacing: -0.5,
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            // Horizontal Category List
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(
-                  categories.length,
-                  (index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedCategoryIndex = index;
-                        if (index < destinations.length) {
-                          buttonCarouselController.animateToPage(index);
-                        }
-                      });
-                    },
-                    child: _buildCategory(
-                      categories[index],
-                      selectedCategoryIndex == index,
+              // Horizontal Category List
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                    categories.length,
+                    (index) => GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedCategoryIndex = index;
+                          // Jump to page if it exists in the carousel
+                          if (index < destinations.length) {
+                            buttonCarouselController.animateToPage(index);
+                          }
+                        });
+                      },
+                      child: _buildCategory(
+                        categories[index],
+                        selectedCategoryIndex == index,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 25),
+              const SizedBox(height: 25),
 
-            // Carousel Slider
-            CarouselSlider(
-              items: destinations.map((destination) {
-                return _buildDestinationCard(
-                  title: destination['title'] as String,
-                  subtitle: destination['subtitle'] as String,
-                  rating: destination['rating'] as double,
-                  reviews: destination['reviews'] as int,
-                  imageUrl: destination['imageUrl'] as String,
-                  isLiked: likedCards[destination['title']] ?? false,
-                  onLikePressed: () {
+              // Carousel Slider
+              CarouselSlider(
+                items: destinations.map((destination) {
+                  return _buildDestinationCard(
+                    title: destination['title'] as String,
+                    subtitle: destination['subtitle'] as String,
+                    rating: destination['rating'] as double,
+                    reviews: destination['reviews'] as int,
+                    imageUrl: destination['imageUrl'] as String,
+                    isLiked: likedCards[destination['title']] ?? false,
+                    onLikePressed: () {
+                      setState(() {
+                        likedCards[destination['title']] =
+                            !(likedCards[destination['title']] ?? false);
+                      });
+                    },
+                  );
+                }).toList(),
+                carouselController: buttonCarouselController,
+                options: CarouselOptions(
+                  height: 450,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.85,
+                  aspectRatio: 1.0,
+                  initialPage: 0,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 4),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enableInfiniteScroll: true,
+                  onPageChanged: (index, reason) {
                     setState(() {
-                      likedCards[destination['title']] =
-                          !(likedCards[destination['title']] ?? false);
+                      // Syncs the category highlights with the auto-playing slides
+                      selectedCategoryIndex = index;
                     });
                   },
-                );
-              }).toList(),
-              carouselController: buttonCarouselController,
-              options: CarouselOptions(
-                height: 420,
-                enlargeCenterPage: true,
-                viewportFraction: 0.85,
-                aspectRatio: 1.0,
-                initialPage: 0,
-
-                // --- NEW AUTO-SCROLL LOGIC ---
-                autoPlay: true, // Enables auto sliding
-                autoPlayInterval: const Duration(
-                  seconds: 3,
-                ), // 3 second gap between slides
-                autoPlayAnimationDuration: const Duration(
-                  milliseconds: 800,
-                ), // Slide speed
-                autoPlayCurve: Curves.fastOutSlowIn, // Smooth animation curve
-                enableInfiniteScroll: true, // Keeps looping through the 3 cards
-                // --- SYNC CATEGORY HIGHLIGHT ---
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    // This ensures the category highlight at the top moves with the slider
-                    selectedCategoryIndex = index;
-                  });
-                },
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 100), // Space for bottom nav
+            ],
+          ),
         ),
       ),
+      // Set extendBody to true to let the list scroll behind the floating nav
+      extendBody: true,
       bottomNavigationBar: _buildBottomNav(),
     );
   }
@@ -276,15 +283,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w200,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 28,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -301,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // THE FIXED "SEE MORE" BUTTON
+                  // SEE MORE BUTTON
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -309,21 +316,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(
                           builder: (context) => DetailScreen(
                             destination: {
-                              'name':
-                                  title, // Changed key to 'name' to match your DetailScreen
+                              'name': title,
                               'imageUrl': imageUrl,
+                              'location': subtitle,
                             },
                           ),
                         ),
                       );
                     },
                     child: Container(
-                      width: double
-                          .infinity, // Now spans the full width of the card
+                      width: double.infinity,
                       padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.7),
+                        color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: Colors.white30),
                       ),
                       child: const Row(
                         children: [
@@ -335,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Spacer(), // Pushes arrow to far right
+                          Spacer(),
                           Icon(
                             Icons.arrow_circle_right_rounded,
                             size: 45,
@@ -379,6 +386,13 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(35),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
