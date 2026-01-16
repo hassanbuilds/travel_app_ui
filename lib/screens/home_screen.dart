@@ -66,112 +66,109 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
+        toolbarHeight: 80, // Added height for better spacing
         backgroundColor: Colors.white,
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 15),
-              child: Text(
-                "Hello, Vanessa ",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+            const Text(
+              "Hello, Vanessa",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28, // Bigger title
+                fontWeight: FontWeight.w900, // Extra bold
+                letterSpacing: -0.5,
               ),
             ),
             Text(
               "Welcome to Trip Glide",
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 11,
-                fontWeight: FontWeight.w300,
+                color: Colors.grey.shade500, // Modern soft grey
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.only(right: 25, top: 15),
+            padding: EdgeInsets.only(right: 20),
             child: CircleAvatar(
-              radius: 22,
+              radius: 24,
               backgroundImage: AssetImage("images/profile_pic.jpg"),
             ),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Bar
+            // Search Bar - Fixed to double.infinity
             Container(
-              width: 375,
+              width: double.infinity,
               margin: const EdgeInsets.only(top: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 22),
-              height: 65,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              height: 60,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(22),
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(20),
               ),
-              child: Row(
+              child: const Row(
                 children: [
-                  const Icon(Icons.search, size: 35),
-                  const SizedBox(width: 8),
-                  const Text(
+                  Icon(Icons.search, size: 28, color: Colors.grey),
+                  SizedBox(width: 10),
+                  Text(
                     "Search",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
                   ),
-                  const Spacer(),
-                  const Icon(Icons.filter_list, color: Colors.black, size: 35),
+                  Spacer(),
+                  Icon(Icons.filter_list, color: Colors.black, size: 28),
                 ],
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
             const Text(
               "Select your next trip",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
+              ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 15),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 15),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    categories.length,
-                    (index) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedCategoryIndex = index;
-                          if (index < destinations.length) {
-                            buttonCarouselController.animateToPage(
-                              index,
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                            );
-                          }
-                        });
-                      },
-                      child: _buildCategory(
-                        categories[index],
-                        selectedCategoryIndex == index,
-                      ),
+            // Horizontal Category List
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(
+                  categories.length,
+                  (index) => GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedCategoryIndex = index;
+                        if (index < destinations.length) {
+                          buttonCarouselController.animateToPage(index);
+                        }
+                      });
+                    },
+                    child: _buildCategory(
+                      categories[index],
+                      selectedCategoryIndex == index,
                     ),
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
-            // Carousel
+            // Carousel Slider
             CarouselSlider(
               items: destinations.map((destination) {
                 return _buildDestinationCard(
@@ -191,59 +188,18 @@ class _HomeScreenState extends State<HomeScreen> {
               }).toList(),
               carouselController: buttonCarouselController,
               options: CarouselOptions(
-                autoPlay: false,
+                height: 420,
                 enlargeCenterPage: true,
                 viewportFraction: 0.85,
-                aspectRatio: 1.8,
+                aspectRatio: 1.0,
                 initialPage: 0,
-                height: 405,
-                onPageChanged: null, // we'll keep your logic below if needed
+                enableInfiniteScroll: false,
               ),
             ),
           ],
         ),
       ),
-
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(bottom: 28, left: 43, right: 43),
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(28),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildNavItem(
-              icon: Icons.home_outlined,
-              activeIcon: Icons.home,
-              isActive: true,
-            ),
-            _buildNavItem(
-              icon: Icons.bookmark_border,
-              activeIcon: Icons.bookmark,
-              isActive: false,
-            ),
-            _buildNavItem(
-              icon: Icons.heart_broken_rounded,
-              activeIcon: Icons.explore,
-              isActive: false,
-            ),
-            _buildNavItem(
-              icon: Icons.menu_outlined,
-              activeIcon: Icons.menu,
-              isActive: false,
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -257,9 +213,8 @@ class _HomeScreenState extends State<HomeScreen> {
     required VoidCallback onLikePressed,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(30),
         image: DecorationImage(
           image: NetworkImage(imageUrl),
           fit: BoxFit.cover,
@@ -267,15 +222,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          gradient: const LinearGradient(
+          borderRadius: BorderRadius.circular(30),
+          gradient: LinearGradient(
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
-            colors: [
-              Color.fromRGBO(0, 0, 0, 0.8),
-              Color.fromRGBO(0, 0, 0, 0.5),
-              Colors.transparent,
-            ],
+            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
           ),
         ),
         child: Stack(
@@ -286,17 +237,11 @@ class _HomeScreenState extends State<HomeScreen> {
               right: 20,
               child: GestureDetector(
                 onTap: onLikePressed,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
                   child: Icon(
                     isLiked ? Icons.favorite : Icons.favorite_border,
                     color: isLiked ? Colors.red : Colors.black,
-                    size: 22,
                   ),
                 ),
               ),
@@ -304,109 +249,85 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // Bottom content
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(25, 25, 25, 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+              bottom: 20,
+              left: 20,
+              right: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 18,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 18,
                     ),
-                    const SizedBox(height: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 20),
+                      const SizedBox(width: 5),
+                      Text(
+                        "$rating ($reviews reviews)",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
 
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 22),
-                        const SizedBox(width: 6),
-                        Text(
-                          rating.toStringAsFixed(1),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                  // THE FIXED "SEE MORE" BUTTON
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailScreen(
+                            destination: {
+                              'name':
+                                  title, // Changed key to 'name' to match your DetailScreen
+                              'imageUrl': imageUrl,
+                            },
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "($reviews reviews)",
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 18),
-
-                    // SEE MORE BUTTON with navigation
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(
-                                destination: {
-                                  'title': title,
-                                  'subtitle': subtitle,
-                                  'rating': rating,
-                                  'reviews': reviews,
-                                  'imageUrl': imageUrl,
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 28,
-                            vertical: 14,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: const Text(
+                      );
+                    },
+                    child: Container(
+                      width: double
+                          .infinity, // Now spans the full width of the card
+                      padding: const EdgeInsets.fromLTRB(20, 8, 8, 8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: const Row(
+                        children: [
+                          Text(
                             "See more",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
+                          Spacer(), // Pushes arrow to far right
+                          Icon(
+                            Icons.arrow_circle_right_rounded,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -415,37 +336,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNavItem({
-    required IconData icon,
-    required IconData activeIcon,
-    required bool isActive,
-  }) {
+  Widget _buildCategory(String title, bool isSelected) {
     return Container(
-      width: 50,
-      height: 50,
+      margin: const EdgeInsets.only(right: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Colors.transparent,
-        shape: BoxShape.circle,
+        color: isSelected ? Colors.black : Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(25),
       ),
-      child: Icon(
-        isActive ? activeIcon : icon,
-        color: isActive ? Colors.black : Colors.grey.shade400,
-        size: 24,
+      child: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.white : Colors.black,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
       ),
     );
   }
 
-  Widget _buildCategory(String title, bool isSelected) {
+  Widget _buildBottomNav() {
     return Container(
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+      height: 70,
       decoration: BoxDecoration(
-        color: isSelected ? Colors.black : Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(35),
       ),
-      child: Text(
-        title,
-        style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Icon(Icons.home, color: Colors.white),
+          Icon(Icons.bookmark_border, color: Colors.grey),
+          Icon(Icons.favorite_border, color: Colors.grey),
+          Icon(Icons.person_outline, color: Colors.grey),
+        ],
       ),
     );
   }

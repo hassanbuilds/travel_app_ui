@@ -70,11 +70,31 @@ class _DetailScreenState extends State<DetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      const SizedBox(height: 10),
                       // ... rest of your UI elements
-                      CircleAvatar(
-                        radius: 10,
-
-                        backgroundImage: AssetImage("images/brazil_flag.png"),
+                      Row(
+                        children: [
+                          Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage("images/brazil_flag.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Brazil",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
