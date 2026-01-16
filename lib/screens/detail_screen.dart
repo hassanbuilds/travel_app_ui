@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:travel_app/provider/travel_provider.dart';
 
 class DetailScreen extends StatelessWidget {
