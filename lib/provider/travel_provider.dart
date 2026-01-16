@@ -12,6 +12,6 @@ class TravelProvider extends ChangeNotifier {
 
   void toggleLike(String title) {
     _likedDestinations[title] = !isLiked(title);
-    notifyListeners(); // This updates both Home and Detail screens
+    notifyListeners();
   }
 }
