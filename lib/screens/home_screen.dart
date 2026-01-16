@@ -367,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Icon(Icons.home, color: Colors.white),
           Icon(Icons.bookmark_border, color: Colors.grey),
-          Icon(Icons.favorite_border, color: Colors.grey),
+          Icon(Icons.favorite_outline, color: Colors.grey),
           Icon(Icons.person_outline, color: Colors.grey),
         ],
       ),
