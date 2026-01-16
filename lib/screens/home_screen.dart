@@ -193,7 +193,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 viewportFraction: 0.85,
                 aspectRatio: 1.0,
                 initialPage: 0,
-                enableInfiniteScroll: false,
+
+                // --- NEW AUTO-SCROLL LOGIC ---
+                autoPlay: true, // Enables auto sliding
+                autoPlayInterval: const Duration(
+                  seconds: 3,
+                ), // 3 second gap between slides
+                autoPlayAnimationDuration: const Duration(
+                  milliseconds: 800,
+                ), // Slide speed
+                autoPlayCurve: Curves.fastOutSlowIn, // Smooth animation curve
+                enableInfiniteScroll: true, // Keeps looping through the 3 cards
+                // --- SYNC CATEGORY HIGHLIGHT ---
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    // This ensures the category highlight at the top moves with the slider
+                    selectedCategoryIndex = index;
+                  });
+                },
               ),
             ),
           ],
