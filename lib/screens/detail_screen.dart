@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'package:travel_app/provider/travel_provider.dart';
 
-// Adjust path based on your folder structure
-
 class DetailScreen extends StatelessWidget {
   final Map<String, dynamic> destination;
   const DetailScreen({super.key, required this.destination});
@@ -58,7 +56,6 @@ class DetailScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  // --- FIXED HEADER ---
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 12, 24, 15),
                     child: Column(
