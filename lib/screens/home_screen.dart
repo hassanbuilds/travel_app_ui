@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'detail_screen.dart'; // Ensure this file exists with a DetailScreen widget
+import 'detail_screen.dart';
 
 void main() {
   runApp(
