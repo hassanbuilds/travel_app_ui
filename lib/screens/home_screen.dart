@@ -259,15 +259,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     title,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w200,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.8),
-                      fontSize: 18,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 10),
