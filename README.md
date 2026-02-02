@@ -9,7 +9,6 @@ A visually stunning Travel Application designed with a focus on **Fluid UI** and
 ---
 
 ## 🌟 Key Features
-* **Dynamic Discovery**: Browse destinations with smooth scrolling and hero animations.
 * **Provider State Management**: Centralized logic for managing favorites, search filters, and user selections.
 * **Reactive UI**: The interface updates instantly when state changes, without manual setStates.
 * **Clean Folder Architecture**: Organized by feature and logic for maximum scalability.
